@@ -34,7 +34,7 @@ export default function StepAnlage({ data, onChange, onWeiter }: Props) {
             value={data.leistungKw || ""}
             onChange={(e) => update("leistungKw", e.target.value)}
             placeholder="z.B. 22"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
           <p className="text-xs text-gray-400 mt-1">Mindestens 2,2 kW</p>
         </div>
@@ -51,7 +51,7 @@ export default function StepAnlage({ data, onChange, onWeiter }: Props) {
             value={data.betriebsstunden || ""}
             onChange={(e) => update("betriebsstunden", e.target.value)}
             placeholder="z.B. 2000"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
         </div>
 
@@ -66,7 +66,7 @@ export default function StepAnlage({ data, onChange, onWeiter }: Props) {
             value={data.alterJahre || ""}
             onChange={(e) => update("alterJahre", e.target.value)}
             placeholder="z.B. 5"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
           <p className="text-xs text-gray-400 mt-1">
             Bestimmt den Wirkungsgrad η (0–5 J: 95% | 6–10 J: 90% | 11–15 J: 85% | &gt;15 J: 80%)

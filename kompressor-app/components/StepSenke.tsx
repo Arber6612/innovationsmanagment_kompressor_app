@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { SenkeData } from "@/types"
 
 interface Props {
@@ -10,8 +11,16 @@ interface Props {
 }
 
 export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Props) {
+  const [rawGaspreis, setRawGaspreis] = useState(data.gaspreisEuroKwh > 0 ? data.gaspreisEuroKwh.toString() : "")
+
   function update(field: keyof SenkeData, value: string) {
     onChange({ ...data, [field]: parseFloat(value) || 0 })
+  }
+
+  function updateGaspreis(value: string) {
+    setRawGaspreis(value)
+    const parsed = parseFloat(value.replace(",", "."))
+    if (!isNaN(parsed)) onChange({ ...data, gaspreisEuroKwh: parsed })
   }
 
   const isValid = data.distanzM >= 0 && data.gaspreisEuroKwh > 0
@@ -34,7 +43,7 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             value={data.temperaturbedarf || ""}
             onChange={(e) => update("temperaturbedarf", e.target.value)}
             placeholder="z.B. 60"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
         </div>
 
@@ -49,7 +58,7 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             value={data.distanzM || ""}
             onChange={(e) => update("distanzM", e.target.value)}
             placeholder="z.B. 30"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
           <p className="text-xs text-gray-400 mt-1">Leitungslänge inkl. Höhenunterschied</p>
         </div>
@@ -65,7 +74,7 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             value={data.wanddurchbrueche || ""}
             onChange={(e) => update("wanddurchbrueche", e.target.value)}
             placeholder="z.B. 2"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
           <p className="text-xs text-gray-400 mt-1">350 € pro Wanddurchbruch</p>
         </div>
@@ -81,7 +90,7 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             value={data.fixkostenEuro || ""}
             onChange={(e) => update("fixkostenEuro", e.target.value)}
             placeholder="z.B. 5000"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
         </div>
 
@@ -90,13 +99,12 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             Gaspreis (€/kWh)
           </label>
           <input
-            type="number"
-            min="0"
-            step="0.001"
-            value={data.gaspreisEuroKwh || ""}
-            onChange={(e) => update("gaspreisEuroKwh", e.target.value)}
+            type="text"
+            inputMode="decimal"
+            value={rawGaspreis}
+            onChange={(e) => updateGaspreis(e.target.value)}
             placeholder="z.B. 0.035"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
           <p className="text-xs text-gray-400 mt-1">Aktueller Gaspreis ca. 0,035 €/kWh</p>
         </div>
