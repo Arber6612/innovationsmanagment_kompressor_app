@@ -5,21 +5,32 @@ export interface AnlageData {
 }
 
 export interface SenkeData {
-  temperaturbedarf: number
   distanzM: number
   wanddurchbrueche: number
-  fixkostenEuro: number
+  anschlusskosten: number
   gaspreisEuroKwh: number
+}
+
+export interface Bewertung {
+  label: string
+  farbe: "gruen" | "gelb" | "rot"
+  icon: string
 }
 
 export interface Ergebnis {
   wirkungsgrad: number
   thermischeLeistungKw: number
-  thermischeArbeitKwh: number
-  waermeverlustKwh: number
-  nettoWaermeKwh: number
-  investitionskostenEuro: number
-  jaehrlicheErsparnis: number
+  nutzwaermeKwh: number
+  einsparungEuro: number
+  co2EinsparungT: number
+  volumenstrom: number
+  dn: string
+  waermetauscherModell: string
+  wtPreis: number | null
+  leitungskosten: number
+  kostenWanddurchbrueche: number
+  anschlusskosten: number
+  gesamtinvestition: number
   amortisationJahre: number
-  co2EinsparungKg: number
+  bewertung: Bewertung
 }

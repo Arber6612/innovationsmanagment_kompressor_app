@@ -11,7 +11,9 @@ interface Props {
 }
 
 export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Props) {
-  const [rawGaspreis, setRawGaspreis] = useState(data.gaspreisEuroKwh > 0 ? data.gaspreisEuroKwh.toString() : "")
+  const [rawGaspreis, setRawGaspreis] = useState(
+    data.gaspreisEuroKwh > 0 ? data.gaspreisEuroKwh.toString() : ""
+  )
 
   function update(field: keyof SenkeData, value: string) {
     onChange({ ...data, [field]: parseFloat(value) || 0 })
@@ -23,33 +25,19 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
     if (!isNaN(parsed)) onChange({ ...data, gaspreisEuroKwh: parsed })
   }
 
-  const isValid = data.distanzM >= 0 && data.gaspreisEuroKwh > 0
+  const isValid = data.gaspreisEuroKwh > 0
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-gray-800">Schritt 2: Abwärmenutzung (Senke)</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Schritt 2: Abwärmenutzung</h2>
         <p className="text-sm text-gray-500 mt-1">Angaben zur geplanten Wärmenutzung</p>
       </div>
 
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Temperaturbedarf (°C)
-          </label>
-          <input
-            type="number"
-            step="1"
-            value={data.temperaturbedarf || ""}
-            onChange={(e) => update("temperaturbedarf", e.target.value)}
-            placeholder="z.B. 60"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Distanz zur Quelle L (m)
+            Distanz zur Wärmenutzung L (m)
           </label>
           <input
             type="number"
@@ -60,12 +48,14 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
             placeholder="z.B. 30"
             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
-          <p className="text-xs text-gray-400 mt-1">Leitungslänge inkl. Höhenunterschied</p>
+          <p className="text-xs text-gray-400 mt-1">
+            Trassenmeter inkl. Höhenunterschied (enthält Vor- + Rücklauf)
+          </p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Anzahl Wanddurchbrüche W
+            Anzahl Wanddurchbrüche
           </label>
           <input
             type="number"
@@ -81,17 +71,18 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Fixkosten Wärmerückgewinnung K (€)
+            Anschlusskosten Pumpe + Regelung + Montage (€)
           </label>
           <input
             type="number"
             min="0"
             step="100"
-            value={data.fixkostenEuro || ""}
-            onChange={(e) => update("fixkostenEuro", e.target.value)}
-            placeholder="z.B. 5000"
+            value={data.anschlusskosten || ""}
+            onChange={(e) => update("anschlusskosten", e.target.value)}
+            placeholder="z.B. 3000"
             className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-900 focus:border-blue-500 focus:outline-none"
           />
+          <p className="text-xs text-gray-400 mt-1">Richtwert: 3.000 € (editierbar)</p>
         </div>
 
         <div>

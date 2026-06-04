@@ -14,10 +14,9 @@ const STEPS = ["Kompressor", "Abwärme", "Ergebnis"]
 
 const defaultAnlage: AnlageData = { leistungKw: 0, betriebsstunden: 0, alterJahre: 0 }
 const defaultSenke: SenkeData = {
-  temperaturbedarf: 0,
   distanzM: 0,
   wanddurchbrueche: 0,
-  fixkostenEuro: 0,
+  anschlusskosten: 3000,
   gaspreisEuroKwh: 0.035,
 }
 
