@@ -77,7 +77,7 @@ export default function StepAnlage({ data, onChange, onWeiter }: Props) {
       <button
         onClick={onWeiter}
         disabled={!isValid}
-        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
       >
         Weiter →
       </button>

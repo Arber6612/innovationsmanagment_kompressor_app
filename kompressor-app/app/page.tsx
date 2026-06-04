@@ -1,10 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
+import dynamic from "next/dynamic"
 import Startseite from "@/components/Startseite"
 import StepAnlage from "@/components/StepAnlage"
 import StepSenke from "@/components/StepSenke"
-import Ergebnis from "@/components/Ergebnis"
+
+const Ergebnis = dynamic(() => import("@/components/Ergebnis"), { ssr: false })
 import { berechneErgebnis } from "@/lib/berechnung"
 import { AnlageData, SenkeData, Ergebnis as ErgebnisType } from "@/types"
 

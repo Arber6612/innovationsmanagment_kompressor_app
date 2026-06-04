@@ -32,7 +32,7 @@ export default function Startseite({ onStart }: Props) {
         </p>
         <button
           onClick={onStart}
-          className="mt-8 w-full max-w-xs rounded-2xl bg-blue-600 px-6 py-4 text-base font-bold text-white shadow-md transition hover:bg-blue-700 active:scale-95"
+          className="mt-8 w-full max-w-xs rounded-2xl bg-blue-600 px-6 py-4 text-base font-bold text-white shadow-md touch-manipulation"
         >
           Jetzt berechnen →
         </button>

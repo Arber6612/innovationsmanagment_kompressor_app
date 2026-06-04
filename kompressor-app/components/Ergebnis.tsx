@@ -97,7 +97,7 @@ export default function Ergebnis({ ergebnis, onNeustart }: Props) {
           <BarChart data={diagrammDaten} margin={{ top: 0, right: 0, left: -10, bottom: 0 }}>
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={(v: number) => [`${fmt(v)} kWh`, ""]} />
+            <Tooltip formatter={(v) => [`${fmt(Number(v))} kWh`, ""]} />
             <Bar dataKey="wert" radius={[4, 4, 0, 0]}>
               {diagrammDaten.map((entry, i) => (
                 <Cell key={i} fill={entry.farbe} />
@@ -130,7 +130,7 @@ export default function Ergebnis({ ergebnis, onNeustart }: Props) {
 
       <button
         onClick={onNeustart}
-        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 touch-manipulation"
       >
         Neue Berechnung
       </button>

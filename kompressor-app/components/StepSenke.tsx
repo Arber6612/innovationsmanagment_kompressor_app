@@ -113,14 +113,14 @@ export default function StepSenke({ data, onChange, onZurueck, onBerechnen }: Pr
       <div className="flex gap-3">
         <button
           onClick={onZurueck}
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+          className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 touch-manipulation"
         >
           ← Zurück
         </button>
         <button
           onClick={onBerechnen}
           disabled={!isValid}
-          className="flex-1 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex-1 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation"
         >
           Berechnen
         </button>
