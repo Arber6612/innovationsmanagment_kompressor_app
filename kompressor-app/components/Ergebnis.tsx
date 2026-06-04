@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Ergebnis as ErgebnisType } from "@/types"
 
 interface Props {
@@ -23,22 +24,79 @@ function KennzahlKarte({ label, wert, einheit }: { label: string; wert: string; 
   )
 }
 
-function KostenZeile({ label, wert }: { label: string; wert: string }) {
+function KostenZeile({ label, wert, highlight }: { label: string; wert: string; highlight?: boolean }) {
   return (
     <div className="flex justify-between text-sm text-gray-600">
       <span>{label}</span>
-      <span className="font-medium tabular-nums">{wert}</span>
+      <span className={`tabular-nums ${highlight ? "font-semibold text-gray-800" : "font-medium"}`}>{wert}</span>
     </div>
   )
 }
 
+function VergleichSpalte({
+  titel,
+  investition,
+  foerderung,
+  netto,
+  amortisation,
+  highlight,
+  fmt,
+}: {
+  titel: string
+  investition: number
+  foerderung: number | null
+  netto: number
+  amortisation: number
+  highlight: boolean
+  fmt: (n: number, s?: number) => string
+}) {
+  return (
+    <div className={`rounded-xl border p-4 space-y-1.5 ${highlight ? "border-green-300 bg-green-50" : "border-gray-200 bg-gray-50"}`}>
+      <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${highlight ? "text-green-700" : "text-gray-500"}`}>
+        {titel}
+      </p>
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>Investition</span>
+        <span className="tabular-nums">{fmt(investition)} €</span>
+      </div>
+      {foerderung !== null && (
+        <div className="flex justify-between text-sm text-green-700">
+          <span>Förderung ({Math.round((foerderung / investition) * 100)} %)</span>
+          <span className="tabular-nums font-medium">−{fmt(foerderung)} €</span>
+        </div>
+      )}
+      <div className={`flex justify-between text-sm border-t pt-1.5 ${highlight ? "border-green-200" : "border-gray-200"}`}>
+        <span className="font-semibold text-gray-800">Netto-Investition</span>
+        <span className="tabular-nums font-semibold text-gray-800">{fmt(netto)} €</span>
+      </div>
+      <div className="flex justify-between text-sm text-gray-600 pt-0.5">
+        <span>Amortisation</span>
+        <span className="tabular-nums font-semibold">
+          {amortisation === Infinity ? "∞" : fmt(amortisation, 1)} Jahre
+        </span>
+      </div>
+    </div>
+  )
+}
+
+const BAFA_URL =
+  "https://www.bafa.de/DE/Energie/Energieeffizienz/Energieeffizienz_und_Prozesswaerme/Modul1_Querschnittstechnologien/modul1_querschnittstechnologien_node.html"
+
 export default function Ergebnis({ ergebnis, onNeustart }: Props) {
+  const [foerderungAufgeklappt, setFoerderungAufgeklappt] = useState(false)
+
   const { bewertung } = ergebnis
   const ampel = AMPEL_CONFIG[bewertung.farbe]
   const fmt = (n: number, stellen = 0) =>
     n.toLocaleString("de-DE", { maximumFractionDigits: stellen })
 
   const wandAnzahl = Math.round(ergebnis.kostenWanddurchbrueche / 350)
+
+  const [foerderRate, setFoerderRate] = useState<0.25 | 0.20>(0.25)
+  const foerderungBetrag = ergebnis.gesamtinvestition * foerderRate
+  const nettoMitFoerderung = ergebnis.gesamtinvestition * (1 - foerderRate)
+  const amortisationMitFoerderung =
+    ergebnis.einsparungEuro > 0 ? nettoMitFoerderung / ergebnis.einsparungEuro : Infinity
 
   return (
     <div className="space-y-6">
@@ -130,6 +188,91 @@ export default function Ergebnis({ ergebnis, onNeustart }: Props) {
           <span>Rohrdimension</span>
           <span>{ergebnis.dn}</span>
         </div>
+      </div>
+
+      {/* Fördermittel-Block */}
+      <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 space-y-3">
+        <div>
+          <p className="text-sm font-semibold text-blue-800">Fördermittel: BAFA EEW – Modul 1 Querschnittstechnologien</p>
+          <p className="text-xs text-blue-700 mt-1">
+            Druckluftanlagen und Wärmeübertrager zur Abwärmenutzung von Bestandsanlagen werden
+            vom BAFA im Rahmen der Bundesförderung für Energie- und Ressourceneffizienz in der
+            Wirtschaft (EEW) explizit gefördert – nur für KMU.
+          </p>
+          <ul className="mt-2 space-y-0.5 text-xs text-blue-700 list-disc list-inside">
+            <li>Kleine Unternehmen: <strong>25 %</strong> der förderfähigen Ausgaben</li>
+            <li>Mittlere Unternehmen: <strong>20 %</strong> der förderfähigen Ausgaben</li>
+            <li>Mindestinvestition: 2.000 € · Max. Zuschuss: 200.000 €</li>
+            <li>Antrag muss <strong>vor</strong> Projektbeginn gestellt werden</li>
+          </ul>
+        </div>
+
+        <a
+          href={BAFA_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 underline underline-offset-2"
+        >
+          Weitere Infos auf bafa.de →
+        </a>
+
+        {!foerderungAufgeklappt ? (
+          <button
+            onClick={() => setFoerderungAufgeklappt(true)}
+            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 touch-manipulation"
+          >
+            Mit BAFA-Förderung vergleichen (20–25 %)
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-semibold text-blue-800 uppercase tracking-wide">Vergleich</p>
+              <div className="flex rounded-lg border border-blue-300 overflow-hidden text-xs font-medium">
+                <button
+                  onClick={() => setFoerderRate(0.25)}
+                  className={`px-3 py-1 transition ${foerderRate === 0.25 ? "bg-blue-600 text-white" : "text-blue-700 hover:bg-blue-100"}`}
+                >
+                  Klein (25 %)
+                </button>
+                <button
+                  onClick={() => setFoerderRate(0.20)}
+                  className={`px-3 py-1 transition ${foerderRate === 0.20 ? "bg-blue-600 text-white" : "text-blue-700 hover:bg-blue-100"}`}
+                >
+                  Mittel (20 %)
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <VergleichSpalte
+                titel="Ohne Förderung"
+                investition={ergebnis.gesamtinvestition}
+                foerderung={null}
+                netto={ergebnis.gesamtinvestition}
+                amortisation={ergebnis.amortisationJahre}
+                highlight={false}
+                fmt={fmt}
+              />
+              <VergleichSpalte
+                titel={`Mit Förderung (${foerderRate * 100} %)`}
+                investition={ergebnis.gesamtinvestition}
+                foerderung={foerderungBetrag}
+                netto={nettoMitFoerderung}
+                amortisation={amortisationMitFoerderung}
+                highlight={true}
+                fmt={fmt}
+              />
+            </div>
+            <p className="text-xs text-blue-600 italic">
+              * Richtwert – Förderbedingungen können sich ändern. Antrag vor Projektbeginn stellen.
+            </p>
+            <button
+              onClick={() => setFoerderungAufgeklappt(false)}
+              className="w-full rounded-lg border border-blue-300 px-4 py-2 text-xs font-medium text-blue-700 transition hover:bg-blue-100 touch-manipulation"
+            >
+              Vergleich ausblenden
+            </button>
+          </div>
+        )}
       </div>
 
       <button
